@@ -11,7 +11,7 @@
 // take a look at solversSpec.js to see what the tests are expecting
 
 
-// return a matrix (an array of arrays) representing a single nxn chessboard, with n rooks placed such that none of them can attack each other
+// // return a matrix (an array of arrays) representing a single nxn chessboard, with n rooks placed such that none of them can attack each other
 
 // window.findNRooksSolution = function(n, board) {
 //   var certificate = board ? board : new Board({'n' : n});
@@ -57,11 +57,11 @@ var deepCopy = function(oldValue) {
 //   var storage = [board];
 //   var solutionCount = 0;
 //   var v = 0;
-//   while (storage.length && v <1000322) {
+//   while (storage.length) {
 //     // console.log("storage now contains: " + storage);
 //     // console.log("storage length is: " + storage.length)
 //     // console.log(solutionCount)
-//     var temp = storage.shift();
+//     var temp = storage.pop();
 //     for (var i = 0; i < n; i++) {
 //       var newArr = deepCopy(temp.rows())
 //       var temp2 = new Board(newArr);
@@ -76,7 +76,6 @@ var deepCopy = function(oldValue) {
 //         }
 //       }
 //     }
-//     v++;
 //   }
 
 
@@ -86,37 +85,37 @@ var deepCopy = function(oldValue) {
 
 
 
-// // return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
-// window.findNQueensSolution = function(n,board) {
-//   board = board? board : new Board({'n': n});
-//   board.rowToAdd = 0;
-//   // console.log(board.rows().length)
-//   var storage = [board];
-//   var solutionCount = 0;
-//   var v = 0;
-//   while (storage.length && v <100322) {
-//     // console.log("storage now contains: " + storage);
-//     // console.log("storage length is: " + storage.length)
-//     // console.log(solutionCount)
-//     var temp = storage.shift();
-//     for (var i = 0; i < n; i++) {
-//       var newArr = deepCopy(temp.rows())
-//       var temp2 = new Board(newArr);
-//       temp2.rowToAdd = temp.rowToAdd + 1;
-//       temp2.togglePiece.call(temp2,temp.rowToAdd,i);
-//       if (!temp2.hasAnyQueensConflicts()) {
-//         if (temp2.rowToAdd === n) {
-//           console.log('Single solution for ' + n + ' queens:', JSON.stringify(temp2.rows()));
-//           return temp2.rows();
-//         } else {
-//           storage.push(temp2);
-//         }
-//       }
-//     }
-//     v++;
-//   }
-//   return {"n": n};
-//   };
+// return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
+window.findNQueensSolution = function(n,board) {
+  board = board? board : new Board({'n': n});
+  board.rowToAdd = 0;
+  // console.log(board.rows().length)
+  var storage = [board];
+  var solutionCount = 0;
+  var v = 0;
+  while (storage.length && v <100322) {
+    // console.log("storage now contains: " + storage);
+    // console.log("storage length is: " + storage.length)
+    // console.log(solutionCount)
+    var temp = storage.pop();
+    for (var i = 0; i < n; i++) {
+      var newArr = deepCopy(temp.rows())
+      var temp2 = new Board(newArr);
+      temp2.rowToAdd = temp.rowToAdd + 1;
+      temp2.togglePiece.call(temp2,temp.rowToAdd,i);
+      if (!temp2.hasAnyQueensConflicts()) {
+        if (temp2.rowToAdd === n) {
+          console.log('Single solution for ' + n + ' queens:', JSON.stringify(temp2.rows()));
+          return temp2.rows();
+        } else {
+          storage.push(temp2);
+        }
+      }
+    }
+    v++;
+  }
+  return {"n": n};
+  };
 
 
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
@@ -126,15 +125,15 @@ window.countNQueensSolutions = function(n,board) {
   }
   board = board? board : new Board({'n': n});
   board.rowToAdd = 0;
+  board.availableColumns = {0: true, 1: true,}
   // console.log(board.rows().length)
   var storage = [board];
   var solutionCount = 0;
-  var v = 0;
-  while (storage.length && v <1000322) {
+  while (storage.length) {
     // console.log("storage now contains: " + storage);
     // console.log("storage length is: " + storage.length)
     // console.log(solutionCount)
-    var temp = storage.shift();
+    var temp = storage.pop();
     for (var i = 0; i < n; i++) {
       var newArr = deepCopy(temp.rows())
       var temp2 = new Board(newArr);
@@ -148,8 +147,14 @@ window.countNQueensSolutions = function(n,board) {
         }
       }
     }
-    v++;
   }
   console.log('Number of solutions for ' + n + ' queens:', solutionCount);
   return solutionCount;
 };
+
+window.timeNQueens = function(n,board){
+  var start = Date.now();
+  var result = countNQueensSolutions(n);
+  var end = Date.now();
+  console.log(result + " solutions were calculated in " + (end - start) + " milliseconds");
+}
