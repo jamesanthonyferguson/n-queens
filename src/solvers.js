@@ -38,7 +38,7 @@ window.findNRooksSolution = function(n, board) {
   //Add a rook on the kth row
   var solution = certificate.rows(); //fixme
 
-  //console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
+  console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
   return solution;
 };
 
@@ -49,48 +49,45 @@ var deepCopy = function(oldValue) {
   return newValue = JSON.parse(strValue);
 }
 
-// // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
-// window.countNRooksSolutions = function(n,board) {
-//   board = board? board : new Board({'n': n});
-//   board.rowToAdd = 0;
-//   // console.log(board.rows().length)
-//   var storage = [board];
-//   var solutionCount = 0;
-//   var v = 0;
-//   while (storage.length && v <1000322) {
-//     // console.log("storage now contains: " + storage);
-//     // console.log("storage length is: " + storage.length)
-//     // console.log(solutionCount)
-//     var temp = storage.shift();
-//     for (var i = 0; i < n; i++) {
-//       var newArr = deepCopy(temp.rows())
-//       var temp2 = new Board(newArr);
-//       temp2.rowToAdd = temp.rowToAdd + 1;
-//       temp2.togglePiece.call(temp2,temp.rowToAdd,i);
-//       if (!temp2.hasAnyRooksConflicts()) {
+// return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
+window.countNRooksSolutions = function(n,board) {
+  board = board? board : new Board({'n': n});
+  board.rowToAdd = 0;
+  // console.log(board.rows().length)
+  var storage = [board];
+  var solutionCount = 0;
+  var v = 0;
+  while (storage.length && v <1000322) {
+    // console.log("storage now contains: " + storage);
+    // console.log("storage length is: " + storage.length)
+    // console.log(solutionCount)
+    var temp = storage.shift();
+    for (var i = 0; i < n; i++) {
+      var newArr = deepCopy(temp.rows())
+      var temp2 = new Board(newArr);
+      temp2.rowToAdd = temp.rowToAdd + 1;
+      temp2.togglePiece.call(temp2,temp.rowToAdd,i);
+      if (!temp2.hasAnyRooksConflicts()) {
 
-//         if (temp2.rowToAdd === n) {
-//           solutionCount++;
-//         } else {
-//           storage.push(temp2);
-//         }
-//       }
-//     }
-//     v++;
-//   }
+        if (temp2.rowToAdd === n) {
+          solutionCount++;
+        } else {
+          storage.push(temp2);
+        }
+      }
+    }
+    v++;
+  }
 
 
-//   console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
-//   return solutionCount;
-// };
+  console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
+  return solutionCount;
+};
 
 
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
 window.findNQueensSolution = function(n,board) {
-  if (n === 0) {
-    return 1;
-  }
   board = board? board : new Board({'n': n});
   board.rowToAdd = 0;
   // console.log(board.rows().length)
@@ -107,11 +104,9 @@ window.findNQueensSolution = function(n,board) {
       var temp2 = new Board(newArr);
       temp2.rowToAdd = temp.rowToAdd + 1;
       temp2.togglePiece.call(temp2,temp.rowToAdd,i);
-      console.log("for and while loop")
       if (!temp2.hasAnyQueensConflicts()) {
         if (temp2.rowToAdd === n) {
-          console.log(++solutionCount);
-          console.log(temp2.rows())
+          console.log('Single solution for ' + n + ' queens:', JSON.stringify(temp2.rows()));
           return temp2.rows();
         } else {
           storage.push(temp2);
@@ -120,8 +115,7 @@ window.findNQueensSolution = function(n,board) {
     }
     v++;
   }
-  console.log('Number of solutions for ' + n + ' queens:', solutionCount);
-  return solutionCount;
+  return {"n": n};
   };
 
 
