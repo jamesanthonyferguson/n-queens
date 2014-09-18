@@ -152,9 +152,46 @@ window.countNQueensSolutions = function(n,board) {
   return solutionCount;
 };
 
+var nQueens3 = function(n) {
+  var counter = 0;
+  //Make a bitwise representation of a filled chessrow e.g. for n = 6, get 111111 in bits
+  var fullRow = (1<<n)-1;
+
+  var recurseQ = function(ld,c,rd) {
+    var threatened = ld|c|rd;
+    var open = ~(threatened) & fullRow;
+      //while there are open spaces
+      //we place a queen in rightmost open space
+      //update the threated columns and diagonals
+      //and then recurse for the next row
+    while (open > 0) {
+      // find rightmost open space in bit
+      var rightMost = 1;
+      while(!(rightMost & open)){
+        rightMost = rightMost << 1;
+      }
+
+      //place a queen in rightmost bit, and check off that space from diagonals, columns, and open.
+      open = open ^ rightMost;
+      var newld = (ld | rightMost) << 1;
+      var newrd = (rd | rightMost) >> 1;
+      var newc = c | rightMost;
+      recurseQ(newld,newc,newrd);
+    }
+    if(c === fullRow){
+      counter++;
+    }
+  }
+
+  recurseQ(0,0,0);
+  return counter;
+
+}
+//console.log(nQueens3(4))
+
 window.timeNQueens = function(n,board){
   var start = Date.now();
-  var result = countNQueensSolutions(n);
+  var result = nQueens3(n);
   var end = Date.now();
   console.log(result + " solutions were calculated in " + (end - start) + " milliseconds");
 }
